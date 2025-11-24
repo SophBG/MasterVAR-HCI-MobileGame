@@ -4,6 +4,12 @@ public class Obstacle : MonoBehaviour
 {
     public float moveSpeed;
     public string wallTag;
+    private ObstacleSpawner spawner;
+
+    public void Initialize(ObstacleSpawner spawnerRef)
+    {
+        spawner = spawnerRef;
+    }
 
     private void Update()
     {
@@ -14,6 +20,7 @@ public class Obstacle : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(wallTag))
         {
+            spawner.NotifyObstacleDestroyed();
             Destroy(this.gameObject);
         }
     }

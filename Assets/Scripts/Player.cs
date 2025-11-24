@@ -1,8 +1,8 @@
 using UnityEngine;
-using Unity.MLAgents;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
-public class MLPlayer : Agent
+public class Player : MonoBehaviour
 {
     [Header("Movement")]
     public float jumpForce;
@@ -21,8 +21,21 @@ public class MLPlayer : Agent
     [Header("Obstacle")]
     public string obstacleTag;
 
+    [Header("Events")]
+    public UnityEvent OnCrash;
+
     private Rigidbody rb = null;
 
+    private void OnEnable()
+    {
+        inputActions.FindActionMap("Player").Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.FindActionMap("Player").Disable();
+    }
+    
     private void OnDestroy()
     {
         // Clean up jump action subscription
@@ -49,6 +62,7 @@ public class MLPlayer : Agent
         if (collision.gameObject.CompareTag(obstacleTag))
         {
             Destroy(collision.gameObject);
+            OnCrash?.Invoke();
         }
     }
 
